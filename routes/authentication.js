@@ -9,7 +9,7 @@ const router = new Router();
 router.post(
   '/sign-up',
   passport.authenticate('local-sign-up', {
-    successRedirect: '/private',
+    successRedirect: '/user-profile',
     failureRedirect: '/sign-up'
   })
 );
@@ -17,14 +17,22 @@ router.post(
 router.post(
   '/sign-in',
   passport.authenticate('local-sign-in', {
-    successRedirect: '/private',
+    successRedirect: '/user-profile',
     failureRedirect: '/sign-in'
   })
 );
 
-router.post('/sign-out', (req, res, next) => {
+router.post('/logout', (req, res, next) => {
   req.logout();
-  res.json({});
+  res.status(200).json({ message: 'Log out success!' });
+});
+
+router.get('/loggedin', (req, res, next) => {
+  if (req.isAuthenticated()) {
+    res.status(200).json(req.user);
+    return;
+  }
+  res.status(403).json({ message: 'Unauthorized' });
 });
 
 module.exports = router;

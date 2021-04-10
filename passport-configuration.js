@@ -24,17 +24,15 @@ passport.use(
   'local-sign-up',
   new LocalStrategy(
     {
-      usernameField: 'email',
       passReqToCallback: true
     },
-    (req, email, password, callback) => {
-      const name = req.body.name;
+    (req, username, password, callback) => {
       bcryptjs
         .hash(password, 10)
         .then((hash) => {
           return User.create({
-            name,
-            email,
+            username,
+            password,
             passwordHashAndSalt: hash
           });
         })
@@ -50,10 +48,10 @@ passport.use(
 
 passport.use(
   'local-sign-in',
-  new LocalStrategy({ usernameField: 'email' }, (email, password, callback) => {
+  new LocalStrategy((username, password, callback) => {
     let user;
     User.findOne({
-      email
+      username
     })
       .then((document) => {
         user = document;
@@ -61,13 +59,13 @@ passport.use(
       })
       .then((passwordMatchesHash) => {
         if (passwordMatchesHash) {
-          callback(null, user);
+          return callback(null, user);
         } else {
-          callback(new Error('WRONG_PASSWORD'));
+          return callback(null, false, { message: 'Incorrect password.' });
         }
       })
       .catch((error) => {
-        callback(error);
+        return callback(error);
       });
   })
 );

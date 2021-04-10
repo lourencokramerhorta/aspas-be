@@ -13,6 +13,7 @@ const bindUserToViewLocals = require('./middleware/bind-user-to-view-locals.js')
 const passportConfigure = require('./passport-configuration.js');
 const baseRouter = require('./routes/index');
 const authenticationRouter = require('./routes/authentication');
+const cors = require('cors');
 
 const app = express();
 
@@ -37,6 +38,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bindUserToViewLocals);
+
+app.use(
+  cors({
+    credentials: true,
+    origin: ['http://localhost:3000']
+  })
+);
 
 app.use('/', require('./routes/user-routes'));
 app.use('/', require('./routes/book-routes'));

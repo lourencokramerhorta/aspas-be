@@ -6,7 +6,7 @@ const axios = require('axios');
 
 const router = express.Router();
 
-router.post('/books-list', (req, res, next) => {
+router.get('/books-list', (req, res, next) => {
   Book.find()
     .then((allBooksFromDB) => {
       res.json(allBooksFromDB);
