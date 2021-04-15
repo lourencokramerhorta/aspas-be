@@ -13,7 +13,11 @@ const schema = new mongoose.Schema({
   genre: {
     type: String
   },
-  isbn: [{ type: String, required: true, trim: true }]
+  cover_i: {
+    type: String
+  },
+  isbn: [{ type: String, required: true, trim: true }],
+  first_publish_year: { type: Number }
 });
 
 module.exports = mongoose.model('Book', schema);

@@ -17,21 +17,26 @@ router.get('/books-list', (req, res, next) => {
 });
 
 router.post('/find-or-create', async (req, res, next) => {
-  console.log('boddyyy', req.body);
+  console.log('boddyyy', req.body.book);
   try {
-    const result = await Book.findOne({ isbn: req.body.isbn[0] });
+    let { book } = req.body;
+    const result = await Book.findOne({ isbn: book.isbn[0] });
     let bookId = '';
     if (result) {
       bookId = result._id;
     } else {
       const newBook = await Book.create({
-        title: req.body.title,
-        author: req.body.author_name,
-        isbn: req.body.isbn
+        title: book.title,
+        author: book.author_name,
+        isbn: book.isbn || [],
+        edition: book.edition_key || [],
+        cover_i: book.cover_i,
+        first_publish_year: book.first_publish_year
       });
       bookId = newBook._id;
+      console.log('======================>', newBook);
     }
-    console.log(req.session.passport.user);
+    console.log(req.user);
     //add book to user (findByIdAndUpdate da coleção de livros do user com o novo bookId)
     //console.log('req.session', req.session);
 
@@ -65,7 +70,7 @@ router.post('/books-create', (req, res, next) => {
     });
 });
 
-router.post('/book/:isbn', (req, res, next) => {
+router.get('/book-profile/:isbn', (req, res, next) => {
   Book.findOne({ isbn: req.params.isbn })
     .then((aBookFromDB) => {
       res.json(aBookFromDB);
