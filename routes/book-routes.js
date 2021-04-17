@@ -46,9 +46,11 @@ router.post('/find-or-create', async (req, res, next) => {
         $push: { books: bookId }
       },
       { new: true }
-    ).then((theResponse) => {
-      res.json(theResponse);
-    });
+    )
+      .populate('books places')
+      .then((theResponse) => {
+        res.json(theResponse);
+      });
   } catch (error) {
     res.status(400).json({ message: 'deu erro na pesquisa ou criação' });
   }

@@ -5,11 +5,12 @@ const Schema = mongoose.Schema;
 
 const schema = new mongoose.Schema(
   {
-    from: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    to: { type: Schema.Types.ObjectId },
-    bookOffer: { type: Schema.Types.ObjectId, ref: 'Book' },
-    bookRequest: { type: Schema.Types.ObjectId, ref: 'Book' },
-    requestState: { type: String }
+    user1: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    user2: { type: Schema.Types.ObjectId },
+    book1: { type: Schema.Types.ObjectId, ref: 'Book' },
+    book2: { type: Schema.Types.ObjectId, ref: 'Book' },
+    type: { type: String, enum: 'shelf' || 'user' },
+    status: { enum: 'pending' || 'complete', default: 'pending' }
   },
   {
     timestamps: true

@@ -1,8 +1,20 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const User = require('../models/user.js');
+const Transaction = require('../models/transaction-model');
 
 const router = express.Router();
+
+router.post('/transaction/:id/:book2', (req, res, next) => {
+  Transaction.create({
+    user1: req.session.passport.user,
+    user2: req.params.id,
+    book2: req.params.book2,
+    type: req.params.type
+  }).then(() => {
+    res.redirect(`/user/${req.params.id}/transactions`);
+  });
+});
 
 router.get('/transaction', (req, res, next) => {
   User.find()

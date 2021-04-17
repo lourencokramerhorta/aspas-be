@@ -12,6 +12,8 @@ passport.serializeUser((user, callback) => {
 
 passport.deserializeUser((id, callback) => {
   User.findById(id)
+    .populate('books')
+    .populate('places')
     .then((user) => {
       callback(null, user);
     })
