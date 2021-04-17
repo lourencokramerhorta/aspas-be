@@ -80,15 +80,15 @@ router.get('/book-profile/:isbn', (req, res, next) => {
     });
 });
 
-router.put('/user/:userId/book/:bookId', async (req, res, next) => {
+router.post('/remove-book/:bookId', async (req, res, next) => {
   try {
-    const { userId, bookId } = req.params;
-
+    const { bookId } = req.params;
+    console.log(req.session);
     const result = await User.findByIdAndUpdate(
-      userId,
+      req.session.passport.user,
       { $pull: { books: bookId } },
       { new: true }
-    );
+    ).populate('books');
     if (result) {
       res.json(result);
     }

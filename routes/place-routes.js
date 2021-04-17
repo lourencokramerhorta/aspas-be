@@ -4,7 +4,6 @@ const User = require('../models/user.js');
 const Place = require('../models/places-model');
 const Shelf = require('../models/shelf-model');
 
-
 const router = express.Router();
 
 router.post('/create-place', async (req, res, next) => {
@@ -24,7 +23,13 @@ router.post('/create-place', async (req, res, next) => {
       shelf: newShelf._id,
       owners: [req.session.passport.user]
     });
-    res.status(200).json(newPlace);
+    const user = await User.findByIdAndUpdate(
+      req.session.passport.user,
+      { $push: { places: newPlace._id } },
+      { new: true }
+    );
+    console.log('hey here');
+    res.status(200).json({ newPlace, user });
   } catch (error) {
     res.json(error);
   }

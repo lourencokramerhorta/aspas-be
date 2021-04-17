@@ -25,7 +25,8 @@ const schema = new mongoose.Schema(
       type: String,
       default: ''
     },
-    location: { type: { type: String }, coordinates: [Number] }
+    location: { type: { type: String }, coordinates: [Number] },
+    places: [{ type: Schema.Types.ObjectId, ref: 'Place' }]
   },
   {
     timestamps: true

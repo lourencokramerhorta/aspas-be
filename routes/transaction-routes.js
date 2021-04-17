@@ -4,7 +4,7 @@ const User = require('../models/user.js');
 
 const router = express.Router();
 
-router.get('/user-list', (req, res, next) => {
+router.get('/transaction', (req, res, next) => {
   User.find()
     .then((users) => {
       res.json(users);
