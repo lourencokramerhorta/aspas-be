@@ -26,7 +26,15 @@ router.get('/user/:id', (req, res, next) => {
     });
 });
 
-router.put('/user/:id', (req, res, next) => {
+router.get('/user/:id/edit', (req, res, next) => {
+  User.findById(req.params.id)
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((error) => res.json(error));
+});
+
+router.put('/user/:id/edit', (req, res, next) => {
   User.findByIdAndUpdate(req.params.id, req.body)
     .then(() => {
       res.json({
