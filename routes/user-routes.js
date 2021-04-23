@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const User = require('../models/user.js');
+const uploader = require('../configs/cloudinary-setup.config');
 
 const router = express.Router();
 
@@ -34,12 +35,18 @@ router.get('/user/:id/edit', (req, res, next) => {
     .catch((error) => res.json(error));
 });
 
+router.post('/upload', uploader.single('imageUrl'), (req, res, next) => {
+  if (!req.file) {
+    next(new Error('No file uploaded!'));
+    return;
+  }
+  res.json({ secure_url: req.file.path });
+});
+
 router.put('/user/:id/edit', (req, res, next) => {
-  User.findByIdAndUpdate(req.params.id, req.body)
-    .then(() => {
-      res.json({
-        message: `User with ${req.params.id} is updated successfully.`
-      });
+  User.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    .then((user) => {
+      res.json(user);
     })
     .catch((error) => {
       res.json(error);

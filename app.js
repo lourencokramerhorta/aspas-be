@@ -49,6 +49,7 @@ app.use(
 app.use('/', require('./routes/user-routes'));
 app.use('/', require('./routes/book-routes'));
 app.use('/', require('./routes/place-routes'));
+app.use('/', require('./routes/transaction-routes'));
 app.use('/auth', authenticationRouter);
 app.use('/', baseRouter);
 

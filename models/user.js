@@ -21,9 +21,8 @@ const schema = new mongoose.Schema(
       type: String
     },
     books: [{ type: Schema.Types.ObjectId, ref: 'Book' }],
-    photo: {
-      type: String,
-      default: ''
+    imageUrl: {
+      type: String
     },
     location: { type: { type: String }, coordinates: [Number] },
     places: [{ type: Schema.Types.ObjectId, ref: 'Place' }]
