@@ -19,15 +19,24 @@ const app = express();
 
 app.use(serveFavicon(path.join(__dirname, 'public/images', 'favicon.ico')));
 app.use(logger('dev'));
+app.use(
+  cors({
+    credentials: true,
+    origin: (process.env.FRONTEND_PORT || '').split(',')
+  })
+);
 app.use(express.json());
 app.use(
   expressSession({
     secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: false,
+    proxy: true,
     cookie: {
       maxAge: 15 * 24 * 60 * 60 * 1000,
-      httpOnly: true
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : false,
+      secure: process.env.NODE_ENV === 'production'
     },
     store: new (connectMongo(expressSession))({
       mongooseConnection: mongoose.connection,
@@ -38,14 +47,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bindUserToViewLocals);
-
-app.use(
-  cors({
-    credentials: true,
-    origin: false,
-    mothods: ['GET', 'PUT', 'POST']
-  })
-);
 
 app.use('/', require('./routes/user-routes'));
 app.use('/', require('./routes/book-routes'));
