@@ -1,26 +1,25 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const User = require('../models/user.js');
-const Place = require('../models/places-model');
+const Place = require('../models/place-model');
 const Shelf = require('../models/shelf-model');
 
 const router = express.Router();
 
 router.post('/create-place', async (req, res, next) => {
-  const { name, description } = req.body;
-  /////// create shelf em await para poder por o id no place! (dar update a shelf com o id do place)
-  console.log('place/shelf body', req.body);
+  console.log(req.body);
+  const { name, description, imageUrl } = req.body;
 
   try {
     const newShelf = await Shelf.create({
       name: 'My new shelf'
     });
-    console.log(newShelf);
 
     const newPlace = await Place.create({
       name: name,
       description: description,
       shelf: newShelf._id,
+      imageUrl: imageUrl,
       owners: [req.session.passport.user]
     });
     const user = await User.findByIdAndUpdate(
@@ -28,7 +27,6 @@ router.post('/create-place', async (req, res, next) => {
       { $push: { places: newPlace._id } },
       { new: true }
     );
-    console.log('hey here');
     res.status(200).json({ newPlace, user });
   } catch (error) {
     res.json(error);
@@ -37,6 +35,7 @@ router.post('/create-place', async (req, res, next) => {
 
 router.get('/place/:id', (req, res, next) => {
   Place.findById(req.params.id)
+    .populate('shelf')
     .then((place) => {
       res.json(place);
     })

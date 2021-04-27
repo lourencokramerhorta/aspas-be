@@ -14,8 +14,8 @@ const schema = new mongoose.Schema(
       type: String
     },
     owners: [{ type: Schema.Types.ObjectId, ref: 'Owner' }],
-    shelf: { type: Schema.Types.ObjectId },
-    photo: {
+    shelf: [{ type: Schema.Types.ObjectId, ref: 'Shelf' }],
+    imageUrl: {
       type: String,
       default: ''
     },
