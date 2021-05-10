@@ -53,7 +53,7 @@ router.put('/user/:id/edit', (req, res, next) => {
     });
 });
 
-router.delete('/user/:id', (req, res, next) => {
+router.delete('/user/:id/delete', (req, res, next) => {
   User.findByIdAndRemove(req.params.id)
     .then(() => {
       res.json({
